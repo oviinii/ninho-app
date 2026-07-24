@@ -24,6 +24,16 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../pages/SubscriptionCancelPage.vue'),
   },
   {
+    path: '/access-instructions',
+    name: 'access-instructions',
+    component: () => import('../pages/AccessInstructionsPage.vue'),
+  },
+  {
+    path: '/test/checkout',
+    name: 'test-checkout',
+    component: () => import('../pages/TestCheckoutPage.vue'),
+  },
+  {
     path: '/auth',
     name: 'auth',
     component: () => import('../layouts/AuthLayout.vue'),
@@ -101,25 +111,13 @@ router.beforeEach(async (to, from, next) => {
     const { data: { session } } = await supabase.auth.getSession()
     const isAuthenticated = !!session
 
-    // Se estiver na página de checkout e já estiver autenticado, redirecionar para dashboard
-    if (to.path === '/checkout' && isAuthenticated) {
-      next({ name: 'Dashboard' })
-      return
-    }
-
-    // Proteger rotas do app
     if (to.meta.requiresAuth && !isAuthenticated) {
       next({ name: 'login' })
-      return
-    }
-
-    // Redirecionar login para dashboard se já autenticado
-    if (to.path.startsWith('/auth') && isAuthenticated) {
+    } else if (to.path.startsWith('/auth') && isAuthenticated) {
       next({ name: 'Dashboard' })
-      return
+    } else {
+      next()
     }
-
-    next()
   } catch (error) {
     console.error('Erro no guard de navegação:', error)
     next()
@@ -127,9 +125,3 @@ router.beforeEach(async (to, from, next) => {
 })
 
 export default router
-// Adicionar no array de routes:
-{
-  path: '/access-instructions',
-  name: 'access-instructions',
-  component: () => import('../pages/AccessInstructionsPage.vue')
-},
