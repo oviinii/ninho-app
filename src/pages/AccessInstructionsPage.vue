@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Copy, Check, Mail, User, Key, ArrowRight } from 'lucide-vue-next'
+import { Copy, Check, Mail, User, ArrowRight } from 'lucide-vue-next'
 
 const router = useRouter()
 const copied = ref(false)
@@ -9,7 +9,6 @@ const email = ref('')
 const name = ref('')
 
 onMounted(() => {
-  // Recuperar dados do checkout
   email.value = sessionStorage.getItem('checkout_email') || ''
   name.value = sessionStorage.getItem('checkout_name') || ''
 })
@@ -30,7 +29,6 @@ const goToRegister = () => {
 <template>
   <div class="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4">
     <div class="max-w-lg w-full">
-      <!-- Header -->
       <div class="text-center mb-8">
         <div class="flex items-center justify-center gap-2 mb-2">
           <span class="text-2xl">👶</span>
@@ -42,11 +40,8 @@ const goToRegister = () => {
         </div>
       </div>
 
-      <!-- Main Card -->
       <div class="p-6 rounded-xl bg-white/5 border border-white/10">
-        <h1 class="text-xl font-light text-white text-center mb-6">
-          🎉 Acesso Liberado!
-        </h1>
+        <h1 class="text-xl font-light text-white text-center mb-6">🎉 Acesso Liberado!</h1>
 
         <div class="bg-white/5 rounded-lg p-4 mb-6">
           <p class="text-white/40 text-sm text-center">
@@ -54,7 +49,6 @@ const goToRegister = () => {
           </p>
         </div>
 
-        <!-- Dados do Checkout -->
         <div class="space-y-3 mb-6">
           <div class="flex items-center gap-3 p-3 rounded-lg bg-white/3 border border-white/5">
             <User class="w-4 h-4 text-white/20 flex-shrink-0" />
@@ -62,10 +56,7 @@ const goToRegister = () => {
               <p class="text-xs text-white/20">Nome</p>
               <p class="text-sm text-white/60 truncate">{{ name || 'Não informado' }}</p>
             </div>
-            <button 
-              @click="copyToClipboard(name)"
-              class="p-1.5 rounded hover:bg-white/5 transition-colors"
-            >
+            <button @click="copyToClipboard(name)" class="p-1.5 rounded hover:bg-white/5 transition-colors">
               <Copy class="w-3.5 h-3.5 text-white/20 hover:text-white/40" />
             </button>
           </div>
@@ -76,16 +67,12 @@ const goToRegister = () => {
               <p class="text-xs text-white/20">Email</p>
               <p class="text-sm text-white/60 truncate">{{ email || 'Não informado' }}</p>
             </div>
-            <button 
-              @click="copyToClipboard(email)"
-              class="p-1.5 rounded hover:bg-white/5 transition-colors"
-            >
+            <button @click="copyToClipboard(email)" class="p-1.5 rounded hover:bg-white/5 transition-colors">
               <Copy class="w-3.5 h-3.5 text-white/20 hover:text-white/40" />
             </button>
           </div>
         </div>
 
-        <!-- Instruções -->
         <div class="space-y-3 mb-6">
           <p class="text-xs text-white/20 uppercase tracking-wider">📋 Passo a passo</p>
           
@@ -114,27 +101,18 @@ const goToRegister = () => {
           </div>
         </div>
 
-        <!-- Botão Criar Conta -->
-        <button
-          @click="goToRegister"
-          class="w-full py-3 bg-emerald-500/20 hover:bg-emerald-500/30 rounded-lg text-emerald-400 font-medium transition-colors flex items-center justify-center gap-2"
-        >
+        <button @click="goToRegister" class="w-full py-3 bg-emerald-500/20 hover:bg-emerald-500/30 rounded-lg text-emerald-400 font-medium transition-colors flex items-center justify-center gap-2">
           Criar minha conta agora
           <ArrowRight class="w-4 h-4" />
         </button>
 
-        <p class="text-center text-white/10 text-xs mt-4">
-          🔒 Seus dados estão seguros e criptografados
-        </p>
+        <p class="text-center text-white/10 text-xs mt-4">🔒 Seus dados estão seguros e criptografados</p>
       </div>
 
-      <!-- Suporte -->
       <div class="text-center mt-6">
         <p class="text-white/10 text-xs">
           Precisa de ajuda? 
-          <a href="#" class="text-white/20 hover:text-white/40 transition-colors">
-            Fale com o suporte
-          </a>
+          <a href="#" class="text-white/20 hover:text-white/40 transition-colors">Fale com o suporte</a>
         </p>
       </div>
     </div>
