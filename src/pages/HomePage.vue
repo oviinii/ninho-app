@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { 
   ArrowRight, 
@@ -83,14 +83,8 @@ const testimonials = [
             @click="router.push('/checkout')"
             class="px-6 py-2.5 bg-white/10 hover:bg-white/15 rounded-lg text-white/80 text-sm font-medium transition-colors flex items-center justify-center gap-2"
           >
-            Começar agora
+            Assinar agora
             <ArrowRight class="w-4 h-4" />
-          </button>
-          <button 
-            @click="router.push('/auth/login')"
-            class="px-6 py-2.5 bg-white/5 hover:bg-white/10 rounded-lg text-white/40 text-sm transition-colors"
-          >
-            Já tenho conta
           </button>
         </div>
         <div class="flex flex-wrap justify-center gap-6 mt-8 text-xs text-white/20">

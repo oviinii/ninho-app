@@ -127,3 +127,9 @@ router.beforeEach(async (to, from, next) => {
 })
 
 export default router
+// Adicionar no array de routes:
+{
+  path: '/access-instructions',
+  name: 'access-instructions',
+  component: () => import('../pages/AccessInstructionsPage.vue')
+},

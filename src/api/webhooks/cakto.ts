@@ -1,5 +1,3 @@
-import { supabase } from '@/lib/supabase'
-
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
@@ -34,30 +32,15 @@ async function handlePaymentSucceeded(data: any) {
   console.log('✅ Pagamento recebido:', data)
   
   const email = data.customer?.email || data.metadata?.checkout_email
-  
-  if (email) {
-    // Verificar se usuário já existe
-    const { data: existingUser } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('email', email)
-      .single()
+  const name = data.customer?.name || data.metadata?.checkout_name
 
-    if (!existingUser) {
-      // Se não existir, o usuário deve criar a conta manualmente
-      // Mas podemos marcar que ele já pagou
-      console.log('📝 Usuário com email', email, 'pagou, mas ainda não tem conta')
-    } else {
-      // Atualizar perfil para premium
-      await supabase
-        .from('profiles')
-        .update({ is_premium: true })
-        .eq('id', existingUser.id)
-    }
+  if (email) {
+    console.log(`📝 Pagamento confirmado para: ${email} (${name})`)
+    // Aqui você pode armazenar que o usuário pagou
+    // para referência futura
   }
 }
 
 async function handleSubscriptionCreated(data: any) {
   console.log('📦 Assinatura criada:', data)
-  // Atualizar status da assinatura no banco
 }
