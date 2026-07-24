@@ -1,6 +1,6 @@
 {
-  "buildCommand": "npm run vercel-build",
-  "installCommand": "npm install --legacy-peer-deps",
+  "installCommand": "pnpm install --no-frozen-lockfile",
+  "buildCommand": "pnpm run build",
   "outputDirectory": "dist",
   "framework": "vite"
 }
