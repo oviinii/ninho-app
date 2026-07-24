@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { Mail, Lock, ArrowRight, Eye, EyeOff, Loader2 } from 'lucide-vue-next'
+import { Mail, Lock, ArrowRight, Eye, EyeOff, Loader2, ArrowLeft } from 'lucide-vue-next'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -44,14 +44,17 @@ const goToHome = () => {
 
 <template>
   <div class="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4">
+    <!-- Botão voltar -->
     <button 
       @click="goToHome"
-      class="fixed top-4 left-4 text-white/20 hover:text-white/40 transition-colors text-sm flex items-center gap-1"
+      class="fixed top-4 left-4 text-white/20 hover:text-white/40 transition-colors text-sm flex items-center gap-1.5 group"
     >
-      ← Voltar
+      <ArrowLeft class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+      Voltar
     </button>
 
     <div class="max-w-md w-full">
+      <!-- Header -->
       <div class="text-center mb-8">
         <div class="flex items-center justify-center gap-2 mb-4">
           <span class="text-2xl">👶</span>
@@ -61,8 +64,10 @@ const goToHome = () => {
         <p class="text-white/30 text-sm mt-1">Faça login para acessar sua conta</p>
       </div>
 
+      <!-- Card -->
       <div class="p-6 rounded-2xl bg-gradient-to-br from-white/5 to-white/3 border border-white/10">
         <form @submit.prevent="handleLogin" class="space-y-4">
+          <!-- Email -->
           <div>
             <label class="text-sm text-white/30 block mb-1.5">Email</label>
             <div class="relative">
@@ -77,6 +82,7 @@ const goToHome = () => {
             </div>
           </div>
 
+          <!-- Senha -->
           <div>
             <label class="text-sm text-white/30 block mb-1.5">Senha</label>
             <div class="relative">
@@ -99,16 +105,19 @@ const goToHome = () => {
             </div>
           </div>
 
+          <!-- Esqueceu a senha -->
           <div class="flex items-center justify-end">
             <a href="#" class="text-xs text-white/20 hover:text-white/40 transition-colors">
               Esqueceu a senha?
             </a>
           </div>
 
+          <!-- Error -->
           <div v-if="error" class="p-3 rounded-lg bg-rose-500/10 border border-rose-500/10">
-            <p class="text-sm text-rose-400/70">{{ error }}</p>
+            <p class="text-sm text-rose-400/70 text-center">{{ error }}</p>
           </div>
 
+          <!-- Botão Login -->
           <button
             type="submit"
             :disabled="loading"
@@ -122,6 +131,7 @@ const goToHome = () => {
           </button>
         </form>
 
+        <!-- Link para criar conta -->
         <div class="mt-6 pt-6 border-t border-white/5">
           <p class="text-center text-white/15 text-xs">
             Já fez o pagamento e não tem uma conta?
@@ -132,7 +142,10 @@ const goToHome = () => {
         </div>
       </div>
 
-      <p class="text-center text-white/10 text-xs mt-6">🔒 Seus dados estão seguros</p>
+      <!-- Footer -->
+      <p class="text-center text-white/10 text-xs mt-6">
+        🔒 Seus dados estão seguros e criptografados
+      </p>
     </div>
   </div>
 </template>
