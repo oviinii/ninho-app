@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "vercel-build": "npm install && npm run build"
   },
   "dependencies": {
     "@radix-vue/accordion": "^1.0.0",
