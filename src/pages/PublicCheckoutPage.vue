@@ -27,7 +27,7 @@ const plan = {
   ]
 }
 
-const handleCheckout = async () => {
+const handleCheckout = () => {
   if (!email.value || !name.value) {
     error.value = 'Preencha seu nome e email'
     return
@@ -42,12 +42,12 @@ const handleCheckout = async () => {
   error.value = ''
 
   try {
-    // Salvar dados do usuário temporariamente
+    // Salvar dados do usuário para usar depois
     sessionStorage.setItem('checkout_email', email.value)
     sessionStorage.setItem('checkout_name', name.value)
 
-    // Redirecionar para o checkout da Cakto
-    await caktoService.redirectToCheckout(email.value, name.value)
+    // Redirecionar para o link de pagamento
+    caktoService.redirectToCheckout(email.value, name.value)
     
   } catch (err: any) {
     error.value = err.message || 'Erro ao iniciar pagamento'
