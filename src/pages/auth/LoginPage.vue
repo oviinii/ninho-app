@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { Mail, Lock, ArrowRight, Eye, EyeOff, Loader2, LogIn } from 'lucide-vue-next'
+import { Mail, Lock, ArrowRight, Eye, EyeOff, Loader2 } from 'lucide-vue-next'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -44,7 +44,6 @@ const goToHome = () => {
 
 <template>
   <div class="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4">
-    <!-- Botão voltar -->
     <button 
       @click="goToHome"
       class="fixed top-4 left-4 text-white/20 hover:text-white/40 transition-colors text-sm flex items-center gap-1"
@@ -113,7 +112,7 @@ const goToHome = () => {
           <button
             type="submit"
             :disabled="loading"
-            class="w-full py-3 bg-white/10 hover:bg-white/15 rounded-lg text-white/80 font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+            class="w-full py-3 bg-gradient-to-r from-white/10 to-white/5 hover:from-white/15 hover:to-white/10 rounded-xl text-white/80 font-medium transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 flex items-center justify-center gap-2 border border-white/10 hover:border-white/20"
           >
             <Loader2 v-if="loading" class="w-4 h-4 animate-spin" />
             <span v-else>
@@ -123,7 +122,6 @@ const goToHome = () => {
           </button>
         </form>
 
-        <!-- Link para criar conta - apenas para usuários que já pagaram -->
         <div class="mt-6 pt-6 border-t border-white/5">
           <p class="text-center text-white/15 text-xs">
             Já fez o pagamento e não tem uma conta?
@@ -134,9 +132,7 @@ const goToHome = () => {
         </div>
       </div>
 
-      <p class="text-center text-white/10 text-xs mt-6">
-        🔒 Seus dados estão seguros
-      </p>
+      <p class="text-center text-white/10 text-xs mt-6">🔒 Seus dados estão seguros</p>
     </div>
   </div>
 </template>

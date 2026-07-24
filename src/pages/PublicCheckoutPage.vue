@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { caktoService } from '@/services/cakto.service'
-import { Loader2, Check, Shield, Smartphone, Clock, CreditCard } from 'lucide-vue-next'
+import { Loader2, Check, Shield, Smartphone, Clock, CreditCard, ArrowLeft, Sparkles } from 'lucide-vue-next'
 
 const router = useRouter()
 const loading = ref(false)
@@ -27,6 +27,10 @@ const plan = {
   ]
 }
 
+const goToHome = () => {
+  router.push('/')
+}
+
 const handleCheckout = () => {
   if (!email.value || !name.value) {
     error.value = 'Preencha seu nome e email'
@@ -42,13 +46,9 @@ const handleCheckout = () => {
   error.value = ''
 
   try {
-    // Salvar dados do usuário para usar depois
     sessionStorage.setItem('checkout_email', email.value)
     sessionStorage.setItem('checkout_name', name.value)
-
-    // Redirecionar para o link de pagamento
     caktoService.redirectToCheckout(email.value, name.value)
-    
   } catch (err: any) {
     error.value = err.message || 'Erro ao iniciar pagamento'
     loading.value = false
@@ -58,7 +58,16 @@ const handleCheckout = () => {
 
 <template>
   <div class="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4">
+    <!-- Botão voltar -->
+    <button 
+      @click="goToHome"
+      class="fixed top-4 left-4 text-white/20 hover:text-white/40 transition-colors text-sm flex items-center gap-1"
+    >
+      ← Voltar
+    </button>
+
     <div class="max-w-5xl w-full">
+      <!-- Header -->
       <div class="text-center mb-8">
         <div class="flex items-center justify-center gap-2 mb-2">
           <span class="text-2xl">👶</span>
@@ -69,9 +78,9 @@ const handleCheckout = () => {
 
       <div class="grid md:grid-cols-2 gap-6">
         <!-- Plano -->
-        <div class="p-6 rounded-xl bg-white/5 border border-white/10">
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-white/5 to-white/3 border border-white/10">
           <div class="flex items-center gap-2 mb-4">
-            <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-medium">Premium</span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-medium border border-emerald-500/20">Premium</span>
           </div>
           <h2 class="text-2xl font-light text-white">{{ plan.name }}</h2>
           <div class="mt-2">
@@ -94,13 +103,13 @@ const handleCheckout = () => {
           </div>
 
           <div class="mt-4 flex items-center justify-center gap-4 text-xs text-white/20">
-            <span class="flex items-center gap-1"><Shield class="w-3 h-3" /> Pagamento seguro</span>
-            <span class="flex items-center gap-1"><CreditCard class="w-3 h-3" /> Cartão de crédito</span>
+            <span class="flex items-center gap-1"><Shield class="w-3.5 h-3.5" /> Pagamento seguro</span>
+            <span class="flex items-center gap-1"><CreditCard class="w-3.5 h-3.5" /> Cartão de crédito</span>
           </div>
         </div>
 
         <!-- Formulário -->
-        <div class="p-6 rounded-xl bg-white/5 border border-white/5">
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-white/5 to-white/3 border border-white/10">
           <h3 class="text-white font-medium text-lg mb-4">Dados para assinatura</h3>
           
           <form @submit.prevent="handleCheckout" class="space-y-4">
@@ -147,10 +156,13 @@ const handleCheckout = () => {
             <button
               type="submit"
               :disabled="loading"
-              class="w-full py-3 bg-white/10 hover:bg-white/15 rounded-lg text-white/80 font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+              class="w-full py-3 bg-gradient-to-r from-emerald-500/20 to-emerald-500/10 hover:from-emerald-500/30 hover:to-emerald-500/20 rounded-xl text-emerald-400 font-medium transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 flex items-center justify-center gap-2 border border-emerald-500/20 hover:border-emerald-500/30"
             >
               <Loader2 v-if="loading" class="w-4 h-4 animate-spin" />
-              {{ loading ? 'Processando...' : 'Assinar agora' }}
+              <span v-else>
+                <Sparkles class="w-4 h-4 inline mr-2" />
+                Assinar agora
+              </span>
             </button>
 
             <p class="text-xs text-white/15 text-center">
@@ -163,7 +175,7 @@ const handleCheckout = () => {
       <!-- Link para login -->
       <p class="text-center text-white/15 text-sm mt-6">
         Já tem uma conta? 
-        <router-link to="/auth/login" class="text-white/30 hover:text-white/50 transition-colors">
+        <router-link to="/auth/login" class="text-emerald-400/50 hover:text-emerald-400 transition-colors">
           Fazer login
         </router-link>
       </p>

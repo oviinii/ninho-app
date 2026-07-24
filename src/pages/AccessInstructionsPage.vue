@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Copy, Check, Mail, User, ArrowRight, Sparkles, ChevronRight } from 'lucide-vue-next'
+import { Copy, Check, Mail, User, ArrowRight, Sparkles } from 'lucide-vue-next'
 
 const router = useRouter()
 const copied = ref(false)
@@ -35,7 +35,6 @@ const goToHome = () => {
 
 <template>
   <div class="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4">
-    <!-- Botão voltar -->
     <button 
       @click="goToHome"
       class="fixed top-4 left-4 text-white/20 hover:text-white/40 transition-colors text-sm flex items-center gap-1"
@@ -44,7 +43,6 @@ const goToHome = () => {
     </button>
 
     <div class="max-w-lg w-full">
-      <!-- Header -->
       <div class="text-center mb-8">
         <div class="flex items-center justify-center gap-2 mb-4">
           <span class="text-2xl">👶</span>
@@ -56,7 +54,6 @@ const goToHome = () => {
         </div>
       </div>
 
-      <!-- Main Card -->
       <div class="p-6 rounded-2xl bg-gradient-to-br from-white/5 to-white/3 border border-white/10">
         <div class="flex items-center gap-3 mb-6">
           <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center">
@@ -71,7 +68,6 @@ const goToHome = () => {
           </p>
         </div>
 
-        <!-- Dados do Checkout -->
         <div class="space-y-3 mb-6">
           <div class="flex items-center gap-3 p-3 rounded-xl bg-white/3 border border-white/5 hover:border-white/10 transition-colors">
             <User class="w-4 h-4 text-white/20 flex-shrink-0" />
@@ -106,7 +102,6 @@ const goToHome = () => {
           </div>
         </div>
 
-        <!-- Instruções -->
         <div class="space-y-3 mb-6">
           <p class="text-xs text-white/20 uppercase tracking-wider">📋 Passo a passo</p>
           
@@ -135,7 +130,6 @@ const goToHome = () => {
           </div>
         </div>
 
-        <!-- Botão Criar Conta -->
         <button
           @click="goToRegister"
           class="w-full py-3 bg-gradient-to-r from-emerald-500/20 to-emerald-500/10 hover:from-emerald-500/30 hover:to-emerald-500/20 rounded-xl text-emerald-400 font-medium transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2 border border-emerald-500/20 hover:border-emerald-500/30"
@@ -144,12 +138,9 @@ const goToHome = () => {
           <ArrowRight class="w-4 h-4" />
         </button>
 
-        <p class="text-center text-white/10 text-xs mt-4">
-          🔒 Seus dados estão seguros e criptografados
-        </p>
+        <p class="text-center text-white/10 text-xs mt-4">🔒 Seus dados estão seguros e criptografados</p>
       </div>
 
-      <!-- Suporte -->
       <div class="text-center mt-6">
         <p class="text-white/10 text-xs">
           Precisa de ajuda? 
