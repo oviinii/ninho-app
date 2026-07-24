@@ -4,21 +4,30 @@
 
 @layer base {
   body {
-    @apply bg-background text-text;
-    font-family: 'Inter', system-ui, sans-serif;
+    background: #0F172A;
+    color: #FFFFFF;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 }
 
 @layer components {
-  .glass {
-    @apply backdrop-blur-lg bg-background-card border border-border rounded-xl;
-  }
-  
   .card {
-    @apply glass p-6 transition-all duration-200;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 16px;
   }
   
   .btn-primary {
-    @apply bg-primary-500 text-white hover:bg-primary-600 px-4 py-2 rounded-lg font-medium transition-all duration-200;
+    background: #7C3AED;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+  
+  .btn-primary:hover {
+    background: #6D28D9;
   }
 }

@@ -39,3 +39,4 @@ coverage/
 # Firebase
 firebase-debug.log
 firebase-debug.*.log
+.env*

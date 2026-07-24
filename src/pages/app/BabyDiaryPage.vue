@@ -2,7 +2,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useBabyStore } from '@/stores/baby'
 import { supabase } from '@/lib/supabase'
-import { Plus, ChevronRight } from 'lucide-vue-next'
+import { Loader2, Plus } from 'lucide-vue-next'
 import BabyForm from '@/components/BabyForm.vue'
 import FeedingForm from '@/components/FeedingForm.vue'
 import SleepForm from '@/components/SleepForm.vue'
@@ -119,7 +119,7 @@ const loadData = async () => {
 }
 
 const handleTabChange = (tab: string) => {
-  activeTab = tab
+  activeTab.value = tab
   if (tab === 'feedings') loadFeedings()
   else if (tab === 'sleep') loadSleep()
   else if (tab === 'diapers') loadDiapers()
@@ -190,7 +190,7 @@ watch(() => babyStore.currentBabyId, async () => {
         <button
           v-for="tab in tabs"
           :key="tab.id"
-          @click="activeTab = tab.id"
+          @click="handleTabChange(tab.id)"
           class="flex-1 py-3 text-center text-sm transition-colors relative"
           :class="activeTab === tab.id ? 'text-white/80' : 'text-white/20 hover:text-white/40'"
         >

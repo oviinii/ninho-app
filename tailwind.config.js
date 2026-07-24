@@ -7,16 +7,6 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          500: '#7C3AED',
-          600: '#6D28D9',
-        },
-        secondary: {
-          500: '#A855F7',
-        },
-        accent: {
-          500: '#F472B6',
-        },
         background: {
           DEFAULT: '#0F172A',
           surface: '#111827',
@@ -29,14 +19,21 @@ export default {
           DEFAULT: '#FFFFFF',
           secondary: '#CBD5E1',
         },
+        primary: {
+          500: '#7C3AED',
+          600: '#6D28D9',
+        },
+        secondary: {
+          500: '#A855F7',
+        },
+        accent: {
+          500: '#F472B6',
+        },
         status: {
           success: '#22C55E',
           warning: '#F59E0B',
           danger: '#EF4444',
         },
-      },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
     },
   },
