@@ -3,74 +3,56 @@ const CAKTO_API_URL = import.meta.env.VITE_CAKTO_API_URL || 'https://api.cakto.c
 const CAKTO_API_KEY = import.meta.env.VITE_CAKTO_API_KEY
 
 export const caktoService = {
-  // Criar checkout para assinatura mensal
-  async createMonthlyCheckout(email: string, name: string): Promise<any> {
+  // Gerar URL de checkout (redirecionamento direto)
+  getCheckoutUrl(email: string, name: string): string {
+    // Parâmetros para o checkout
+    const params = new URLSearchParams({
+      customer_email: email,
+      customer_name: name,
+      product_name: 'Ninho App - Assinatura Mensal',
+      price: '2990',
+      interval: 'month',
+      success_url: `${window.location.origin}/payment/success`,
+      cancel_url: `${window.location.origin}/payment/cancel`
+    })
+
+    return `${CAKTO_API_URL}/checkout?${params.toString()}`
+  },
+
+  // Criar checkout e redirecionar
+  async redirectToCheckout(email: string, name: string): Promise<void> {
     try {
-      const response = await fetch(`${CAKTO_API_URL}/checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${CAKTO_API_KEY}`
-        },
-        body: JSON.stringify({
-          customer: {
-            email,
-            name
-          },
-          items: [{
-            name: 'Ninho App - Assinatura Mensal',
-            price: 2990,
-            quantity: 1
-          }],
-          success_url: `${window.location.origin}/payment/success`,
-          cancel_url: `${window.location.origin}/payment/cancel`
-        })
-      })
+      // Salvar dados do usuário para depois
+      sessionStorage.setItem('checkout_email', email)
+      sessionStorage.setItem('checkout_name', name)
 
-      if (!response.ok) {
-        throw new Error('Erro ao criar checkout')
-      }
-
-      return response.json()
+      // URL do checkout
+      const checkoutUrl = this.getCheckoutUrl(email, name)
+      
+      // Redirecionar para o checkout
+      window.location.href = checkoutUrl
     } catch (error) {
-      console.error('Erro no Cakto:', error)
-      return { checkout_url: null }
+      console.error('Erro ao redirecionar para checkout:', error)
+      throw error
     }
   },
 
-  async getSubscription(subscriptionId: string): Promise<any> {
+  async verifyPayment(checkoutId: string): Promise<any> {
     try {
-      const response = await fetch(`${CAKTO_API_URL}/subscriptions/${subscriptionId}`, {
+      const response = await fetch(`${CAKTO_API_URL}/checkout/${checkoutId}`, {
         headers: {
           'Authorization': `Bearer ${CAKTO_API_KEY}`
         }
       })
 
       if (!response.ok) {
-        throw new Error('Erro ao buscar assinatura')
+        throw new Error('Erro ao verificar pagamento')
       }
 
       return response.json()
     } catch (error) {
-      console.error('Erro ao buscar assinatura:', error)
+      console.error('Erro ao verificar pagamento:', error)
       return null
-    }
-  },
-
-  async cancelSubscription(subscriptionId: string): Promise<boolean> {
-    try {
-      const response = await fetch(`${CAKTO_API_URL}/subscriptions/${subscriptionId}/cancel`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${CAKTO_API_KEY}`
-        }
-      })
-
-      return response.ok
-    } catch (error) {
-      console.error('Erro ao cancelar assinatura:', error)
-      return false
     }
   }
 }

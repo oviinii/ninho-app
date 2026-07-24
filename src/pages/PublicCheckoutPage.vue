@@ -2,13 +2,14 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { caktoService } from '@/services/cakto.service'
-import { Loader2, Check, Shield, Smartphone, Clock } from 'lucide-vue-next'
+import { Loader2, Check, Shield, Smartphone, Clock, CreditCard } from 'lucide-vue-next'
 
 const router = useRouter()
 const loading = ref(false)
 const error = ref('')
 const email = ref('')
 const name = ref('')
+const termsAccepted = ref(false)
 
 const plan = {
   name: 'Ninho App Premium',
@@ -32,6 +33,11 @@ const handleCheckout = async () => {
     return
   }
 
+  if (!termsAccepted.value) {
+    error.value = 'Aceite os termos para continuar'
+    return
+  }
+
   loading.value = true
   error.value = ''
 
@@ -40,18 +46,11 @@ const handleCheckout = async () => {
     sessionStorage.setItem('checkout_email', email.value)
     sessionStorage.setItem('checkout_name', name.value)
 
-    const result = await caktoService.createMonthlyCheckout(
-      'temp_' + Date.now(),
-      email.value,
-      name.value
-    )
-
-    if (result.checkout_url) {
-      window.location.href = result.checkout_url
-    }
+    // Redirecionar para o checkout da Cakto
+    await caktoService.redirectToCheckout(email.value, name.value)
+    
   } catch (err: any) {
     error.value = err.message || 'Erro ao iniciar pagamento'
-  } finally {
     loading.value = false
   }
 }
@@ -59,7 +58,7 @@ const handleCheckout = async () => {
 
 <template>
   <div class="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4">
-    <div class="max-w-4xl w-full">
+    <div class="max-w-5xl w-full">
       <div class="text-center mb-8">
         <div class="flex items-center justify-center gap-2 mb-2">
           <span class="text-2xl">👶</span>
@@ -93,9 +92,14 @@ const handleCheckout = async () => {
               <span class="text-white font-medium">{{ plan.price }}</span>
             </div>
           </div>
+
+          <div class="mt-4 flex items-center justify-center gap-4 text-xs text-white/20">
+            <span class="flex items-center gap-1"><Shield class="w-3 h-3" /> Pagamento seguro</span>
+            <span class="flex items-center gap-1"><CreditCard class="w-3 h-3" /> Cartão de crédito</span>
+          </div>
         </div>
 
-        <!-- Formulário de checkout -->
+        <!-- Formulário -->
         <div class="p-6 rounded-xl bg-white/5 border border-white/5">
           <h3 class="text-white font-medium text-lg mb-4">Dados para assinatura</h3>
           
@@ -122,6 +126,20 @@ const handleCheckout = async () => {
               />
             </div>
 
+            <div class="flex items-start gap-2">
+              <input
+                v-model="termsAccepted"
+                type="checkbox"
+                class="mt-1 w-4 h-4 rounded border-white/10 bg-white/5 text-emerald-400 focus:ring-emerald-400"
+              />
+              <label class="text-xs text-white/25 leading-relaxed">
+                Concordo com os 
+                <a href="#" class="text-white/40 hover:text-white/60 transition-colors">Termos de Uso</a> 
+                e 
+                <a href="#" class="text-white/40 hover:text-white/60 transition-colors">Política de Privacidade</a>
+              </label>
+            </div>
+
             <div v-if="error" class="p-3 rounded-lg bg-rose-500/10 border border-rose-500/10">
               <p class="text-sm text-rose-400/70">{{ error }}</p>
             </div>
@@ -139,22 +157,6 @@ const handleCheckout = async () => {
               🔒 Pagamento seguro via Cakto • Cancelamento a qualquer momento
             </p>
           </form>
-        </div>
-      </div>
-
-      <!-- Benefícios extras -->
-      <div class="grid grid-cols-3 gap-4 mt-6">
-        <div class="flex items-center gap-2 justify-center text-xs text-white/20">
-          <Shield class="w-4 h-4" />
-          Dados seguros
-        </div>
-        <div class="flex items-center gap-2 justify-center text-xs text-white/20">
-          <Smartphone class="w-4 h-4" />
-          100% Mobile
-        </div>
-        <div class="flex items-center gap-2 justify-center text-xs text-white/20">
-          <Clock class="w-4 h-4" />
-          Suporte 24/7
         </div>
       </div>
 
