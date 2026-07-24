@@ -2,14 +2,109 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { supabase } from '@/lib/supabase'
-import { useAuthStore } from '@/stores/auth'
 import { CheckCircle, Loader2 } from 'lucide-vue-next'
 
 const router = useRouter()
-const authStore = useAuthStore()
 const loading = ref(true)
 const error = ref('')
 const step = ref('Verificando pagamento...')
+
+const generatePassword = () => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$'
+  let password = ''
+  for (let i = 0; i < 12; i++) {
+    password += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return password
+}
+
+const createAccount = async (email: string, name: string) => {
+  try {
+    // Verificar se usuário já existe
+    const { data: existingUser } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('email', email)
+      .single()
+
+    if (existingUser) {
+      // Usuário já existe, fazer login
+      step.value = 'Usuário já existe, redirecionando...'
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // Tentar login com senha temporária
+      const tempPassword = generatePassword()
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password: tempPassword
+      })
+      
+      if (signInError) {
+        // Se não conseguir logar, enviar redefinição de senha
+        await supabase.auth.resetPasswordForEmail(email)
+        error.value = 'Já existe uma conta com este email. Verifique seu email para redefinir a senha.'
+        loading.value = false
+        return
+      }
+      
+      loading.value = false
+      return
+    }
+
+    // Criar nova conta
+    step.value = 'Criando sua conta...'
+    const tempPassword = generatePassword()
+    
+    const { data: authData, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password: tempPassword,
+      options: {
+        data: { 
+          full_name: name,
+          is_premium: true
+        }
+      }
+    })
+
+    if (signUpError) throw signUpError
+
+    // Criar família e perfil
+    if (authData?.user) {
+      step.value = 'Configurando sua assinatura premium...'
+      
+      const { data: family, error: familyError } = await supabase
+        .from('families')
+        .insert({
+          name: `Família ${name}`,
+          plan: 'premium',
+          subscription_status: 'active'
+        })
+        .select()
+        .single()
+
+      if (familyError) throw familyError
+
+      await supabase
+        .from('profiles')
+        .update({ 
+          full_name: name,
+          family_id: family.id,
+          is_premium: true
+        })
+        .eq('id', authData.user.id)
+
+      step.value = 'Conta criada com sucesso!'
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    loading.value = false
+
+  } catch (err: any) {
+    console.error('Erro ao criar conta:', err)
+    error.value = err.message || 'Erro ao criar conta'
+    loading.value = false
+  }
+}
 
 onMounted(async () => {
   try {
@@ -23,85 +118,25 @@ onMounted(async () => {
       return
     }
 
-    step.value = 'Criando sua conta...'
-    
-    // Criar conta do usuário
-    const tempPassword = Math.random().toString(36).slice(-8) + 'A1!'
-    
-    const { data: authData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password: tempPassword,
-      options: {
-        data: { 
-          full_name: name,
-          is_premium: true
-        }
-      }
-    })
-
-    if (signUpError) {
-      // Se o usuário já existe, tentar login
-      step.value = 'Usuário já existe, fazendo login...'
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password: tempPassword
-      })
-      
-      if (signInError) {
-        // Se não conseguir logar, enviar email de recuperação
-        step.value = 'Enviando instruções para seu email...'
-        await supabase.auth.resetPasswordForEmail(email)
-        error.value = 'Já existe uma conta com este email. Verifique seu email para redefinir a senha.'
-        loading.value = false
-        return
-      }
-    }
-
-    // Atualizar perfil como premium
-    if (authData?.user) {
-      step.value = 'Ativando sua assinatura...'
-      
-      // Criar família
-      const { data: family, error: familyError } = await supabase
-        .from('families')
-        .insert({
-          name: `Família ${name}`,
-          plan: 'premium',
-          subscription_status: 'active'
-        })
-        .select()
-        .single()
-
-      if (familyError) throw familyError
-
-      // Atualizar perfil
-      await supabase
-        .from('profiles')
-        .update({ 
-          full_name: name,
-          family_id: family.id 
-        })
-        .eq('id', authData.user.id)
-
-      step.value = 'Conta criada com sucesso!'
-    }
+    await createAccount(email, name)
 
     // Limpar dados do checkout
     sessionStorage.removeItem('checkout_email')
     sessionStorage.removeItem('checkout_name')
 
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    loading.value = false
-
   } catch (err: any) {
     console.error(err)
-    error.value = err.message || 'Erro ao criar conta'
+    error.value = err.message || 'Erro ao processar pagamento'
     loading.value = false
   }
 })
 
 const goToLogin = () => {
   router.push('/auth/login')
+}
+
+const goToDashboard = () => {
+  router.push('/app/dashboard')
 }
 </script>
 
@@ -140,7 +175,7 @@ const goToLogin = () => {
       <div v-if="!loading" class="mt-6 space-y-3">
         <button 
           v-if="!error"
-          @click="router.push('/app/dashboard')"
+          @click="goToDashboard"
           class="w-full px-6 py-2.5 bg-white/10 hover:bg-white/15 rounded-lg text-white/70 text-sm font-medium transition-colors"
         >
           Ir para o dashboard
@@ -151,6 +186,13 @@ const goToLogin = () => {
           class="w-full px-6 py-2.5 bg-white/10 hover:bg-white/15 rounded-lg text-white/70 text-sm font-medium transition-colors"
         >
           Ir para o login
+        </button>
+        <button 
+          v-if="error"
+          @click="goToDashboard"
+          class="w-full px-6 py-2.5 bg-white/5 hover:bg-white/10 rounded-lg text-white/40 text-sm font-medium transition-colors"
+        >
+          Tentar acessar mesmo assim
         </button>
       </div>
 
