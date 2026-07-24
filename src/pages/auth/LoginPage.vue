@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { Mail, Lock, ArrowRight, Eye, EyeOff, Loader2 } from 'lucide-vue-next'
+import { Mail, Lock, ArrowRight, Eye, EyeOff, Loader2, LogIn } from 'lucide-vue-next'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -47,7 +47,7 @@ const goToHome = () => {
     <!-- Botão voltar -->
     <button 
       @click="goToHome"
-      class="fixed top-4 left-4 text-white/20 hover:text-white/40 transition-colors text-sm"
+      class="fixed top-4 left-4 text-white/20 hover:text-white/40 transition-colors text-sm flex items-center gap-1"
     >
       ← Voltar
     </button>
@@ -62,7 +62,7 @@ const goToHome = () => {
         <p class="text-white/30 text-sm mt-1">Faça login para acessar sua conta</p>
       </div>
 
-      <div class="p-6 rounded-xl bg-white/5 border border-white/10">
+      <div class="p-6 rounded-2xl bg-gradient-to-br from-white/5 to-white/3 border border-white/10">
         <form @submit.prevent="handleLogin" class="space-y-4">
           <div>
             <label class="text-sm text-white/30 block mb-1.5">Email</label>
