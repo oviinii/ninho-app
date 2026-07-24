@@ -15,15 +15,10 @@ import {
   CheckCircle,
   Heart,
   TrendingUp,
-  Award,
-  Zap,
   LogIn,
-  Sparkles,
   ChevronDown,
   Menu,
-  X,
-  MessageCircle,
-  Mail
+  X
 } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -170,11 +165,14 @@ onMounted(() => {
   }
   window.addEventListener('scroll', handleScroll)
 })
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', () => {})
+})
 </script>
 
 <template>
   <div class="min-h-screen bg-white">
-    
     <!-- NAVBAR -->
     <header 
       class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
@@ -236,7 +234,6 @@ onMounted(() => {
       <div class="absolute inset-0 pointer-events-none">
         <div class="absolute top-0 right-0 w-1/2 h-full bg-emerald-50/30 rounded-full blur-3xl -translate-y-1/4"></div>
         <div class="absolute bottom-0 left-0 w-1/3 h-1/2 bg-purple-50/20 rounded-full blur-3xl translate-y-1/4"></div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-50/10 rounded-full blur-3xl"></div>
       </div>
 
       <div class="max-w-6xl mx-auto px-4 relative z-10">
@@ -325,8 +322,6 @@ onMounted(() => {
                 </div>
               </div>
             </div>
-            <div class="absolute -bottom-3 -right-3 w-20 h-20 bg-emerald-100/50 rounded-full blur-xl"></div>
-            <div class="absolute -top-3 -left-3 w-16 h-16 bg-purple-100/50 rounded-full blur-xl"></div>
           </div>
         </div>
       </div>
